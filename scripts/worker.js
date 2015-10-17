@@ -1,8 +1,20 @@
 importScripts('imageManips.js');
 
+var ready = false;
+
 this.onmessage = function(e) {
   var imageData = e.data.imageData;
   var type = e.data.type;
+
+  if (!ready) {
+    init();
+    var data = {
+      msg: 'I am worker and I am ' + e.data,
+      status: 'ready'
+    };
+    self.postMessage(data);
+    return;
+  }
 
   try {
     length = imageData.data.length / 4;
@@ -26,4 +38,9 @@ this.onmessage = function(e) {
     throw new ManipulationException('Image manipulation error');
     postMessage(undefined);
   }
+}
+
+function init() {
+  ready = true;
+  return;
 }
